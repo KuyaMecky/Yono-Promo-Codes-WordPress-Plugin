@@ -27,20 +27,22 @@ class Yono_Promos {
 
   public function register_cpt_and_tax() {
     // CPT
-    register_post_type(self::CPT, [
-      'label' => 'Yono Promo Codes',
-      'labels' => [
-        'name' => 'Promo Codes',
-        'singular_name' => 'Promo Code',
-        'add_new_item' => 'Add New Promo Code',
-        'edit_item' => 'Edit Promo Code',
-      ],
-      'public' => false,
-      'show_ui' => true,
-      'show_in_menu' => true,
-      'menu_icon' => 'dashicons-tickets-alt',
-      'supports' => ['title'],
-    ]);
+register_post_type(self::CPT, [
+  'label' => 'Yono Promo Codes',
+  'labels' => [
+    'name' => 'Promo Codes',
+    'singular_name' => 'Promo Code',
+    'add_new_item' => 'Add New Promo Code',
+    'edit_item' => 'Edit Promo Code',
+  ],
+  'public' => false,
+  'show_ui' => true,
+  'show_in_menu' => true,
+  // ↓ Use your logo here
+  'menu_icon' => 'https://allyonorefer.com/wp-content/uploads/2025/10/cropped-Untitled-design-9.png',
+  'supports' => ['title'],
+]);
+
 
     // Taxonomy: promo_period (morning/afternoon/evening)
     register_taxonomy(self::TAX, self::CPT, [
@@ -80,6 +82,11 @@ class Yono_Promos {
     $start  = get_post_meta($post->ID, '_yono_start', true); // ISO8601 string
     $end    = get_post_meta($post->ID, '_yono_end', true);   // ISO8601 string
     ?>
+    <div class="yono-meta-logo" style="margin:-4px 0 12px;">
+      <img src="https://allyonorefer.com/wp-content/uploads/2025/10/cropped-Untitled-design-9.png"
+          alt="Yono Promo Codes" style="width:28px;height:28px;vertical-align:middle;border-radius:4px;margin-right:8px;">
+      <strong style="vertical-align:middle;">Yono Promo Details</strong>
+    </div>
     <div class="yono-meta-wrap">
       <p>
         <label><strong>Promo Code</strong></label><br>
@@ -158,17 +165,20 @@ class Yono_Promos {
 
   public function shortcode($atts) {
     $atts = shortcode_atts([
-      'period'       => '',       // comma list: morning,afternoon,evening
-      'status'       => 'active,upcoming', // which to show
+      'period'       => '',
+      'status'       => 'active,upcoming',
       'show_expired' => 'false',
       'limit'        => '100',
-      'layout'       => 'cards',  // cards | list
-      'columns'      => '1',      // for grid
+      'layout'       => 'cards',
+      'columns'      => '1',
       'empty_text'   => 'No promo codes available right now.',
       'show_copy'    => 'true',
       'show_timer'   => 'true',
-      'order'        => 'ASC',    // ASC by end time, then title
+      'order'        => 'ASC',
+      // NEW: countdown format (long = “1d 2h 3m 4s”, compact = “01:02:03”)
+      'format'       => 'long',
     ], $atts, 'yono_promos');
+
 
     $periods = array_filter(array_map('trim', explode(',', strtolower($atts['period']))));
     $show_expired = filter_var($atts['show_expired'], FILTER_VALIDATE_BOOLEAN);
@@ -244,9 +254,10 @@ class Yono_Promos {
 
     // Data to hydrate timers on the front-end
     $json = wp_json_encode([
-      'now'       => gmdate('c'),
-      'showCopy'  => filter_var($atts['show_copy'], FILTER_VALIDATE_BOOLEAN),
-      'showTimer' => filter_var($atts['show_timer'], FILTER_VALIDATE_BOOLEAN),
+      'now'        => gmdate('c'),
+      'showCopy'   => filter_var($atts['show_copy'], FILTER_VALIDATE_BOOLEAN),
+      'showTimer'  => filter_var($atts['show_timer'], FILTER_VALIDATE_BOOLEAN),
+      'format'     => in_array(strtolower($atts['format']), ['long','compact'], true) ? strtolower($atts['format']) : 'long',
     ]);
 
     ob_start(); ?>

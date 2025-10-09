@@ -77,3 +77,33 @@
 
 .yono-meta-wrap .yono-grid { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
 @media (max-width:640px){ .yono-meta-wrap .yono-grid{ grid-template-columns:1fr; } }
+
+
+
+.yono-meta-logo img {
+  width: 28px; height: 28px; border-radius: 4px; vertical-align: middle; margin-right: 8px;
+}
+
+/* Optional: make countdown stand out */
+.yono-promo-card .promo-timer {
+  display:inline-block;
+  margin-top:10px;
+  padding:6px 10px;
+  border-radius:9999px;
+  background: rgba(148,163,184,.10);
+  border: 1px solid rgba(148,163,184,.18);
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.yono-promo-card.status-upcoming .promo-timer {
+  background: rgba(59,130,246,.12);
+  border-color: rgba(59,130,246,.28);
+}
+.yono-promo-card.status-active .promo-timer {
+  background: rgba(251,191,36,.12);
+  border-color: rgba(251,191,36,.28);
+}
+.yono-promo-card.status-expired .promo-timer {
+  background: rgba(239,68,68,.12);
+  border-color: rgba(239,68,68,.28);
+}
