@@ -39,7 +39,7 @@ register_post_type(self::CPT, [
   'show_ui' => true,
   'show_in_menu' => true,
   // ↓ Use your logo here
-  'menu_icon' => 'https://allyonorefer.com/wp-content/uploads/2025/10/cropped-Untitled-design-9.png',
+  'menu_icon' => 'dashicons-tickets-alt',
   'supports' => ['title'],
 ]);
 
