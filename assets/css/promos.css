@@ -1,0 +1,79 @@
+.yono-promos {
+  --bg:#0f1628; --panel:#121b2f; --line:rgba(148,163,184,.18);
+  --text:#e8f0fb; --muted:#9fb2c9; --accent:#f59e0b; --blue:#3b82f6; --green:#22c55e; --red:#ef4444;
+  display:grid; gap:14px;
+}
+.yono-promos[data-layout="cards"] {
+  grid-template-columns: repeat(var(--cols,1), minmax(0,1fr));
+}
+@media (min-width:640px){ .yono-promos[data-layout="cards"]{ --cols:2; } }
+@media (min-width:1024px){ .yono-promos[data-layout="cards"]{ --cols:3; } }
+
+.yono-promos[data-columns="1"]{ --cols:1; }
+.yono-promos[data-columns="2"]{ --cols:2; }
+.yono-promos[data-columns="3"]{ --cols:3; }
+
+.yono-promos-empty {
+  background: rgba(15,23,42,.6);
+  border:1px solid var(--line);
+  color: var(--muted);
+  padding:16px; border-radius:12px; text-align:center;
+}
+
+.yono-promo-card {
+  background: linear-gradient(180deg, rgba(15,23,42,.85), rgba(15,23,42,.7));
+  border:1px solid var(--line);
+  border-radius:16px; padding:16px;
+  color: var(--text);
+  box-shadow: 0 10px 28px rgba(0,0,0,.25);
+  position:relative;
+  overflow:hidden;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+.yono-promo-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(59,130,246,.35);
+  box-shadow: 0 16px 40px rgba(0,0,0,.35);
+}
+
+.promo-badge {
+  position:absolute; top:12px; right:12px;
+  font-size:.75rem; font-weight:700; letter-spacing:.3px;
+  color:#0b1220; background: linear-gradient(135deg,#fbbf24,#f59e0b);
+  border-radius:9999px; padding:4px 10px; box-shadow:0 6px 18px rgba(245,158,11,.25);
+}
+
+.promo-title { margin:4px 0 10px; font-size:1.05rem; font-weight:800; }
+
+.promo-code-wrap {
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  background: rgba(30,41,59,.55);
+  border:1px solid rgba(148,163,184,.2);
+  border-radius:12px; padding:10px 12px;
+}
+.promo-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 800; letter-spacing: .06em;
+  color:#fbbf24; background: rgba(251,191,36,.1);
+  border-radius:8px; padding:6px 8px;
+}
+.promo-copy {
+  margin-left:auto;
+  background: rgba(59,130,246,.18);
+  border:1px solid rgba(59,130,246,.35);
+  color:#93c5fd;
+  border-radius:9999px; padding:8px 12px; cursor:pointer; font-weight:700;
+}
+.promo-copy:hover{ background: rgba(59,130,246,.28); color:#fff; }
+
+.promo-desc { margin:10px 2px 6px; color: var(--muted); font-size:.92rem; }
+
+.promo-timer {
+  margin-top:8px; font-size:.9rem; color:#cbd5e1;
+}
+.yono-promo-card.status-upcoming .promo-timer { color:#93c5fd; }
+.yono-promo-card.status-active .promo-timer { color:#fbbf24; }
+.yono-promo-card.status-expired .promo-timer { color:#fca5a5; }
+
+.yono-meta-wrap .yono-grid { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
+@media (max-width:640px){ .yono-meta-wrap .yono-grid{ grid-template-columns:1fr; } }
