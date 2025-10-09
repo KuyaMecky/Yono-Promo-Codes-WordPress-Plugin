@@ -1,8 +1,3 @@
-Got it! Here’s your **README** updated to display the logo right at the top (centered), using your image URL.
-
-You can paste this whole thing into your `README.md` (GitHub/GitLab) or keep just the header block if you only want the logo addition.
-
----
 
 <p align="center">
   <img src="https://allyonorefer.com/wp-content/uploads/2025/10/cropped-Untitled-design-9.png" alt="Yono Promo Codes Logo" width="140" height="140">
