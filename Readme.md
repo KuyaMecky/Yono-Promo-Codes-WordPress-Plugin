@@ -1,10 +1,10 @@
-# Yono Promo Codes & Games
+# Game and Promo Plugin
 
 A WordPress plugin that lets you:
 
 * Manage **Promo Codes** with start/end schedules
-* Show a **floating “Free Codes”** pill that opens a modern modal with tabs (Morning / Afternoon / Evening)
-* Manage **Games** (active & upcoming) with clean “store-tile” cards, countdowns, search, category chips, and sorting
+* Show a **floating "Free Codes"** pill that opens a modern modal with tabs (Morning / Afternoon / Evening)
+* Manage **Games** (active & upcoming) with clean "store-tile" cards, countdowns, search, category chips, and sorting
 * **Import/Export** games via CSV
 * Choose a **game logo** from the Media Library (or paste a direct URL)
 * Embed everything anywhere with **shortcodes**
@@ -40,8 +40,8 @@ A WordPress plugin that lets you:
 
 * **Scheduling & Countdowns**
 
-  * Promos: “Starts in… / Ends in… / Expired”
-  * Games: “Launches in…” with automatic switch to Live
+  * Promos: "Starts in… / Ends in… / Expired"
+  * Games: "Launches in…" with automatic switch to Live
 
 * **Beautiful UI**
 
@@ -71,7 +71,7 @@ A WordPress plugin that lets you:
 ## Installation
 
 1. Copy the plugin folder into `/wp-content/plugins/`.
-2. Activate **Yono Promo Codes & Games** from **Plugins → Installed Plugins**.
+2. Activate **Game and Promo Plugin** from **Plugins → Installed Plugins**.
 3. Optional: Flush permalinks (visit **Settings → Permalinks**, click **Save**).
 
 ---
@@ -101,7 +101,7 @@ A WordPress plugin that lets you:
      [yono_games columns="3" per_page="60" sort="name"]
      ```
 
-4. **Floating “Free Codes” Button**
+4. **Floating "Free Codes" Button**
 
    * Appears automatically on the site whenever there is at least one **active or upcoming** promo.
 
@@ -124,7 +124,7 @@ Displays cards for your promo codes. Also powers the modal content.
 | `layout`       | string | `cards`                               | Reserved for future layouts.                              |
 | `columns`      | int    | `1`                                   | 1–3 responsive columns.                                   |
 | `empty_text`   | string | `No promo codes available right now.` | Message when empty.                                       |
-| `show_copy`    | bool   | `true`                                | Show “Copy” button.                                       |
+| `show_copy`    | bool   | `true`                                | Show "Copy" button.                                       |
 | `show_timer`   | bool   | `true`                                | Show countdown/status.                                    |
 | `order`        | string | `ASC`                                 | Title ordering.                                           |
 | `format`       | string | `long`                                | `long` or `compact` countdown format.                     |
@@ -152,7 +152,7 @@ Outputs the responsive games grid with toolbar.
 | `per_page`     | int    | `60`    | Max posts.                             |
 | `columns`      | int    | `3`     | 1–4 columns.                           |
 | `sort`         | string | `name`  | `name`, `launch`, `latest`.            |
-| `show_count`   | bool   | `true`  | Show “Showing N games”.                |
+| `show_count`   | bool   | `true`  | Show "Showing N games".                |
 | `show_search`  | bool   | `true`  | Show search input.                     |
 | `show_filters` | bool   | `true`  | Show category chips.                   |
 
@@ -173,7 +173,7 @@ Outputs the responsive games grid with toolbar.
   * Before start → **Upcoming**
   * Between start and end (or no end) → **Active**
   * After end → **Expired**
-* **Countdown**: “Starts in …” / “Ends in …” with `long` or `compact` style
+* **Countdown**: "Starts in …" / "Ends in …" with `long` or `compact` style
 * **Period tabs**: Morning / Afternoon / Evening (used in modal)
 
 ---
@@ -184,7 +184,7 @@ A vertical, gradient **Free Codes** pill fixed at the bottom-right opens a modal
 
 * **Tabs** for Morning / Afternoon / Evening
 * **Copy** buttons and **countdowns** for each promo
-* Appears automatically when there’s at least one **active or upcoming** promo
+* Appears automatically when there's at least one **active or upcoming** promo
 
 No configuration required—styles and scripts load with the plugin.
 
@@ -207,7 +207,7 @@ No configuration required—styles and scripts load with the plugin.
   * **Search** by name/category/badge
   * **Category chips** (All, Slots, Rummy, etc.)
   * **Sort** by name, launch date, latest added
-  * **Countdown** until launch with automatic switch to “Live”
+  * **Countdown** until launch with automatic switch to "Live"
   * Clean, compact **store-tile** cards with logo, spec box, CTA
 
 ---
@@ -269,7 +269,7 @@ Use:
 [yono_promos period="afternoon"]
 ```
 
-**Q: The floating button isn’t visible.**
+**Q: The floating button isn't visible.**
 There must be at least one **active or upcoming** promo. Create a promo or adjust Start/End.
 
 **Q: Can I use external image URLs for logos?**
@@ -284,7 +284,7 @@ Yes. Add/edit terms under **Games → Categories** or **Games → Badges**.
 
 **2.1.0**
 
-* Floating “Free Codes” widget + modal tabs
+* Floating "Free Codes" widget + modal tabs
 * Games grid with store-tile cards, search, filters, sorting, countdown
 * CSV Import/Export (idempotent by title)
 * Media picker for game logos with URL fallback
@@ -304,4 +304,4 @@ This program is free software: you can redistribute it and/or modify it under th
 * **Author:** Kuya Mecky Pogi
 * **GitHub:** [https://github.com/KuyaMecky](https://github.com/KuyaMecky)
 
-If you’d like this README bundled into the plugin folder or want screenshot placeholders added, I can prep a `/assets/` section with example images and update links.
+
