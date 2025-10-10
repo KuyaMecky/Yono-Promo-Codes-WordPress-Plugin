@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Yono Promo Codes & Games
  * Description: Promo codes with scheduling + floating widget & modal, and a Games grid with upcoming countdown, search, filter, sort, CSV import/export. Includes Media Library picker for game logos (with URL fallback).
- * Version: 2.1.0
+ * Version: 2.1.2
  * Author: Kuya Mecky Pogi
  * Author URI: https://github.com/KuyaMecky
  * License: GPL-2.0+
@@ -80,15 +80,14 @@ class Yono_Promos {
   public function admin_assets($hook){
     global $post_type;
     if (($hook==='post-new.php'||$hook==='post.php') && $post_type===self::CPT){
-      wp_enqueue_style('yono-promos-admin', plugin_dir_url(__FILE__).'assets/css/promos.css',[], '2.1.0');
-      wp_enqueue_script('yono-promos-admin', plugin_dir_url(__FILE__).'assets/js/promos.js',['jquery'],'2.1.0', true);
+      wp_enqueue_style('yono-promos-admin', plugin_dir_url(__FILE__).'assets/css/promos.css',[], '2.1.2');
+      wp_enqueue_script('yono-promos-admin', plugin_dir_url(__FILE__).'assets/js/promos.js',['jquery'],'2.1.2', true);
     }
   }
 
   public function enqueue_assets(){
-    // front-end
-    wp_enqueue_style('yono-promos', plugin_dir_url(__FILE__).'assets/css/promos.css',[], '2.1.0');
-    wp_enqueue_script('yono-promos', plugin_dir_url(__FILE__).'assets/js/promos.js',[], '2.1.0', true);
+    wp_enqueue_style('yono-promos', plugin_dir_url(__FILE__).'assets/css/promos.css',[], '2.1.2');
+    wp_enqueue_script('yono-promos', plugin_dir_url(__FILE__).'assets/js/promos.js',[], '2.1.2', true);
   }
 
   public function render_meta_box($post){
@@ -222,30 +221,146 @@ class Yono_Promos {
     return $has;
   }
 
+  /* ---------- Floating widget: server-render each tab ---------- */
   public function render_floating_widget(){
-    if (is_admin() || !$this->has_any_active_or_upcoming_promos()) return;
-    $tabs=['morning'=>'Morning','afternoon'=>'Afternoon','evening'=>'Evening']; ?>
-    <button class="yono-float-trigger" type="button" aria-haspopup="dialog" aria-controls="yonoPromoModal">
-      <span>Free Codes</span>
-      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 12l7 7L21 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <div id="yonoPromoModal" class="yono-modal" role="dialog" aria-modal="true" aria-labelledby="yonoPromoTitle" hidden>
-      <div class="yono-modal__backdrop" data-close-modal></div>
-      <div class="yono-modal__panel" role="document">
-        <div class="yono-modal__head">
-          <div><h3 id="yonoPromoTitle">Yono Games</h3><p class="yono-modal__subtitle">Free Promo Codes</p></div>
-          <button class="yono-modal__close" type="button" aria-label="Close" data-close-modal>&times;</button>
+    if (is_admin()) return;
+
+    // show only if there is at least one active or upcoming promo
+    $q = new WP_Query([
+      'post_type' => self::CPT,
+      'posts_per_page' => 1,
+      'no_found_rows' => true,
+      'orderby' => 'date', 'order' => 'DESC'
+    ]);
+    $show = false; $now=time();
+    while($q->have_posts()){ $q->the_post();
+      $st = get_post_meta(get_the_ID(), '_yono_start', true);
+      $et = get_post_meta(get_the_ID(), '_yono_end', true);
+      $sts=$st?strtotime($st):0; $ets=$et?strtotime($et):0;
+      $status='active'; if($sts && $now<$sts) $status='upcoming'; if($ets && $now>$ets) $status='expired';
+      if($status!=='expired'){ $show=true; break; }
+    }
+    wp_reset_postdata();
+    if(!$show) return;
+
+    $settings_json = esc_attr( wp_json_encode([
+      'now'       => gmdate('c'),
+      'showCopy'  => true,
+      'showTimer' => true,
+      'format'    => 'long'
+    ]) );
+
+    ?>
+    <style>
+      .promo-popup[hidden]{display:none!important}
+      .promo-popup.show{display:flex}
+    </style>
+
+    <!-- Floating pill -->
+    <div class="promo-widget" aria-hidden="false">
+      <button type="button" class="promo-trigger" aria-controls="promoPopup" aria-expanded="false">
+        <span>Free Codes</span>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 12l7 7L21 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <!-- Popup -->
+    <div id="promoPopup" class="promo-popup" role="dialog" aria-modal="true" aria-labelledby="promoTitle" hidden>
+      <div class="promo-content" role="document">
+        <button class="promo-close" type="button" aria-label="Close">&times;</button>
+
+        <div class="promo-header">
+          <h3 id="promoTitle">Yono Games</h3>
+          <p>Free Promo Codes</p>
         </div>
-        <div class="yono-tabs" role="tablist" aria-label="Promo periods">
-          <?php $first=true; foreach($tabs as $slug=>$label): ?>
-            <button role="tab" class="yono-tab<?php echo $first?' is-active':''; ?>" aria-selected="<?php echo $first?'true':'false'; ?>" data-period="<?php echo esc_attr($slug); ?>"><?php echo esc_html($label); ?></button>
-          <?php $first=false; endforeach; ?>
+
+        <div class="tab-navigation" role="tablist" aria-label="Promo periods">
+          <button class="tab-button active" role="tab" aria-selected="true" data-period="morning">Morning</button>
+          <button class="tab-button" role="tab" aria-selected="false" data-period="afternoon">Afternoon</button>
+          <button class="tab-button" role="tab" aria-selected="false" data-period="evening">Evening</button>
         </div>
-        <div class="yono-modal__body">
-          <?php echo do_shortcode('[yono_promos period="morning,afternoon,evening" limit="200" order="ASC" show_timer="true" show_copy="true" format="long"]'); ?>
+
+        <!-- Morning -->
+        <div class="tab-content active" data-period="morning">
+          <div class="yono-promos" data-settings="<?php echo $settings_json; ?>">
+            <?php echo do_shortcode('[yono_promos period="morning" limit="200" order="ASC" show_timer="true" show_copy="true" format="long"]'); ?>
+          </div>
+        </div>
+        <!-- Afternoon -->
+        <div class="tab-content" data-period="afternoon">
+          <div class="yono-promos" data-settings="<?php echo $settings_json; ?>">
+            <?php echo do_shortcode('[yono_promos period="afternoon" limit="200" order="ASC" show_timer="true" show_copy="true" format="long"]'); ?>
+          </div>
+        </div>
+        <!-- Evening -->
+        <div class="tab-content" data-period="evening">
+          <div class="yono-promos" data-settings="<?php echo $settings_json; ?>">
+            <?php echo do_shortcode('[yono_promos period="evening" limit="200" order="ASC" show_timer="true" show_copy="true" format="long"]'); ?>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Toast -->
+    <div id="toast-notification" aria-live="polite" aria-atomic="true">Code copied</div>
+
+    <!-- Open/close + tabs (robust, no re-bucketing) -->
+    <script>
+    (function(){
+      if (window.__yonoPromoInit) return;
+      window.__yonoPromoInit = true;
+
+      document.addEventListener('DOMContentLoaded', function(){
+        var popup   = document.getElementById('promoPopup');
+        var trigger = document.querySelector('.promo-trigger');
+        if (!popup || !trigger) return;
+
+        var closeBtn = popup.querySelector('.promo-close');
+        var tabs = Array.prototype.slice.call(popup.querySelectorAll('.tab-button'));
+        var panes = Array.prototype.slice.call(popup.querySelectorAll('.tab-content'));
+
+        function activate(period){
+          tabs.forEach(function(t){
+            var on = t.getAttribute('data-period')===period;
+            t.classList.toggle('active', on);
+            t.setAttribute('aria-selected', on ? 'true':'false');
+          });
+          panes.forEach(function(p){
+            var on = p.getAttribute('data-period')===period;
+            p.classList.toggle('active', on);
+          });
+        }
+
+        function openPopup(){
+          popup.hidden = false;
+          popup.classList.add('show');
+          document.documentElement.style.overflow = 'hidden';
+          trigger.setAttribute('aria-expanded','true');
+          activate('morning');
+        }
+        function closePopup(){
+          popup.classList.remove('show');
+          popup.hidden = true;
+          document.documentElement.style.overflow = '';
+          trigger.setAttribute('aria-expanded','false');
+        }
+
+        trigger.addEventListener('click', openPopup);
+        if (closeBtn) closeBtn.addEventListener('click', closePopup);
+        popup.addEventListener('click', function(e){ if (e.target === popup) closePopup(); });
+        document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !popup.hidden) closePopup(); });
+
+        // toast feedback for copy
+        var toast = document.getElementById('toast-notification');
+        popup.addEventListener('click', function(e){
+          var btn = e.target.closest && e.target.closest('.promo-copy');
+          if (!btn || !toast) return;
+          toast.classList.add('show');
+          setTimeout(function(){ toast.classList.remove('show'); }, 1200);
+        });
+      });
+    })();
+    </script>
     <?php
   }
 }
@@ -289,21 +404,19 @@ class Yono_Games {
   }
 
   public function enqueue_assets(){
-    wp_enqueue_style('yono-games', plugin_dir_url(__FILE__).'assets/css/games.css',[], '2.1.0');
-    wp_enqueue_script('yono-games', plugin_dir_url(__FILE__).'assets/js/games.js',[], '2.1.0', true);
+    wp_enqueue_style('yono-games', plugin_dir_url(__FILE__).'assets/css/games.css',[], '2.1.2');
+    wp_enqueue_script('yono-games', plugin_dir_url(__FILE__).'assets/js/games.js',[], '2.1.2', true);
   }
 
   public function admin_assets($hook){
-    // Tools page assets
     if (strpos($hook,'yono_games_tools') !== false){
-      wp_enqueue_style('yono-games', plugin_dir_url(__FILE__).'assets/css/games.css',[], '2.1.0');
-      wp_enqueue_script('yono-games-admin', plugin_dir_url(__FILE__).'assets/js/games-admin.js',[], '2.1.0', true);
+      wp_enqueue_style('yono-games', plugin_dir_url(__FILE__).'assets/css/games.css',[], '2.1.2');
+      wp_enqueue_script('yono-games-admin', plugin_dir_url(__FILE__).'assets/js/games-admin.js',[], '2.1.2', true);
     }
-    // Game editor: enable WP media frame + our picker
     global $post_type;
     if (($hook==='post-new.php' || $hook==='post.php') && $post_type===self::CPT){
       wp_enqueue_media();
-      wp_enqueue_script('yono-media-picker', plugin_dir_url(__FILE__).'assets/js/yono-media-picker.js',['jquery'],'2.1.0', true);
+      wp_enqueue_script('yono-media-picker', plugin_dir_url(__FILE__).'assets/js/yono-media-picker.js',['jquery'],'2.1.2', true);
     }
   }
 
