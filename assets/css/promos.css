@@ -1,82 +1,169 @@
-/* ===== Floating pill (matches your latest design) ===== */
-.promo-widget{
-  position:fixed; right:-34px; top:58%; transform:translateY(-50%) rotate(-90deg);
-  z-index:10000; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+/* ================================
+   FLOATING PILL (vertical)
+   ================================ */
+.yono-float-trigger{
+  position:fixed; right:22px; bottom:24px; z-index:9999;
+  display:inline-flex; align-items:center; gap:8px;
+  writing-mode:vertical-rl; transform:rotate(180deg);
+  padding:18px 14px; border:0; border-radius:999px; color:#fff; cursor:pointer;
+  background:linear-gradient(180deg,#f59e0b 0%, #ef4444 100%);
+  box-shadow:0 8px 32px rgba(239,68,68,.35);
+  font-weight:700; letter-spacing:.2px; transition:transform .2s, box-shadow .2s, opacity .2s;
 }
-@media (max-width:768px){ .promo-widget{ right:-38px; top:64%; } }
-@media (max-width:480px){ .promo-widget{ right:-42px; top:68%; transform:translateY(-50%) rotate(-90deg) scale(.92);} }
+.yono-float-trigger:hover{ transform:rotate(180deg) translateY(-2px); box-shadow:0 10px 40px rgba(239,68,68,.45) }
+.yono-float-trigger:focus-visible{ outline:2px solid #fff; outline-offset:3px }
+.yono-float-trigger span, .yono-float-trigger svg{ transform:rotate(180deg) }
 
-.promo-trigger{
-  display:inline-flex; align-items:center; gap:10px;
-  border:0; cursor:pointer; padding:14px 18px; border-radius:999px; font-weight:800; color:#fff;
-  background:linear-gradient(135deg,#f59e0b 0%,#ef4444 100%);
-  box-shadow:0 6px 28px rgba(245,158,11,.45), inset 0 0 0 1px rgba(255,255,255,.1);
-  transition:transform .22s ease, box-shadow .22s ease; letter-spacing:.2px;
+/* ================================
+   PROMO MODAL
+   ================================ */
+.yono-modal[hidden]{display:none}
+.yono-modal{position:fixed; inset:0; z-index:10000}
+.yono-modal__backdrop{position:absolute; inset:0; background:rgba(2,6,23,.6); backdrop-filter:blur(3px)}
+.yono-modal__panel{
+  position:relative; width:min(680px,92vw); margin:6vh auto;
+  background:#0b1220; border:1px solid rgba(148,163,184,.15); border-radius:18px; color:#e5e7eb;
+  box-shadow:0 20px 80px rgba(0,0,0,.5); max-height:88vh; display:flex; flex-direction:column;
 }
-.promo-trigger:hover{ transform:scale(1.05); box-shadow:0 10px 36px rgba(245,158,11,.6); }
+.yono-modal__head{display:flex; justify-content:space-between; align-items:center; padding:18px 20px 8px}
+.yono-modal__head h3{margin:0; font-size:20px; font-weight:800; color:#fbbf24}
+.yono-modal__subtitle{margin:2px 0 0; font-size:12px; color:#9aa4b2}
+.yono-modal__close{background:transparent; border:0; color:#9aa4b2; font-size:26px; line-height:1; padding:6px 10px; border-radius:8px; cursor:pointer}
+.yono-modal__close:hover{ color:#fff; background: rgba(148,163,184,.08) }
+.yono-modal__close:focus-visible{ outline:2px solid #fbbf24; outline-offset:2px }
+.yono-modal__body{ padding:14px 18px 18px; overflow:auto }
 
-/* ===== Popup ===== */
-.promo-popup{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:10001;
-  background:rgba(2,6,23,.68); backdrop-filter:blur(4px); padding:22px; }
-.promo-popup.show{ display:flex; }
-.promo-content{
-  width:min(720px,94vw); max-height:82vh; overflow:auto;
-  background:linear-gradient(180deg,#0c1322,#0b1220);
-  border:1px solid rgba(148,163,184,.2); border-radius:18px; color:#e5e7eb;
-  box-shadow:0 28px 80px rgba(0,0,0,.55);
-  position:relative; padding:18px 18px 20px;
+.yono-tabs{display:flex; gap:12px; padding:10px 18px; border-top:1px solid rgba(148,163,184,.15)}
+.yono-tab{
+  border:1px solid rgba(148,163,184,.2); background:#0e1726; color:#cbd5e1;
+  padding:10px 14px; border-radius:12px; font-weight:700; cursor:pointer
 }
-.promo-close{ position:absolute; top:10px; right:12px; background:transparent; border:0; color:#9aa4b2;
-  font-size:24px; padding:6px; cursor:pointer; border-radius:8px; }
-.promo-close:hover{ color:#fff; background:rgba(148,163,184,.1) }
+.yono-tab.is-active{background:#f59e0b; border-color:#f59e0b; color:#0b1220}
+.yono-tab:focus-visible{ outline:2px solid #fbbf24; outline-offset:2px }
 
-.promo-header{text-align:center; padding:8px 10px 14px; border-bottom:1px solid rgba(148,163,184,.16)}
-.promo-header h3{ margin:0; font-size:22px; font-weight:900; color:#fbbf24 }
-.promo-header p{ margin:6px 0 0; color:#9fb2c9; font-size:13px }
+@media (max-width:480px){ .yono-modal__panel{margin:3vh auto; width:94vw} }
 
-.tab-navigation{ display:flex; gap:12px; padding:14px 6px }
-.tab-button{
-  flex:1 1 0; padding:12px 14px; border-radius:12px; font-weight:800; letter-spacing:.2px;
-  color:#cbd5e1; background:#0f182b; border:1px solid rgba(148,163,184,.22); cursor:pointer;
+/* ================================
+   PROMO CARDS (inside modal + anywhere)
+   ================================ */
+.yono-modal .yono-promos{display:grid; gap:14px}
+.yono-modal .yono-promo-card{background:#0e1726; border:1px solid rgba(148,163,184,.12); border-radius:14px; padding:14px}
+.yono-modal .promo-badge{display:inline-block; font-size:11px; font-weight:800; background:rgba(148,163,184,.14); color:#e5e7eb; border-radius:8px; padding:4px 8px; margin-bottom:6px}
+.yono-modal .promo-title{margin:0 0 6px; font-size:14px; color:#e5e7eb}
+.yono-modal .promo-code-wrap{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.yono-modal .promo-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-weight:900; letter-spacing:.6px}
+.yono-modal .promo-copy{border:0; border-radius:999px; padding:10px 14px; background:#1e293b; color:#cbd5e1; cursor:pointer}
+.yono-modal .promo-copy:hover{background:#334155}
+.yono-modal .promo-desc{margin-top:6px; color:#9aa4b2; font-size:13px}
+.yono-modal .promo-timer{margin-top:6px; color:#fbbf24; font-weight:700; font-size:12px}
+
+/* Grid wrapper when promos are output elsewhere too */
+.yono-promos {
+  --bg:#0f1628; --panel:#121b2f; --line:rgba(148,163,184,.18);
+  --text:#e8f0fb; --muted:#9fb2c9; --accent:#f59e0b; --blue:#3b82f6; --green:#22c55e; --red:#ef4444;
+  display:grid; gap:14px;
 }
-.tab-button.active{ background:#f59e0b; color:#111827; border-color:#f59e0b; box-shadow:0 8px 24px rgba(245,158,11,.28) }
-
-.tab-content{ display:none; padding:6px 2px 2px }
-.tab-content.active{ display:block }
-
-/* Inside popup – promo list */
-.yono-promos{ display:grid; gap:12px }
-.yono-promo-card{
-  background:linear-gradient(180deg, rgba(15,23,42,.90), rgba(15,23,42,.78));
-  border:1px solid rgba(148,163,184,.18);
-  border-radius:14px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.28);
-  transition:transform .2s, border-color .2s, box-shadow .2s;
+.yono-promos[data-layout="cards"] {
+  grid-template-columns: repeat(var(--cols,1), minmax(0,1fr));
 }
-.yono-promo-card:hover{ transform:translateY(-2px); border-color:rgba(59,130,246,.35); box-shadow:0 16px 40px rgba(0,0,0,.35) }
-.promo-badge{ display:inline-block; font-size:11px; font-weight:900; background:rgba(148,163,184,.14);
-  color:#e5e7eb; border-radius:999px; padding:4px 10px; margin-bottom:6px }
-.promo-title{ margin:0 0 8px; font-weight:800; }
-.promo-code-wrap{ display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-  background:rgba(30,41,59,.55); border:1px solid rgba(148,163,184,.2); border-radius:12px; padding:10px 12px; }
-.promo-code{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-weight:900; letter-spacing:.06em;
-  color:#fbbf24; background:rgba(251,191,36,.12); padding:6px 10px; border-radius:8px }
-.promo-copy{ margin-left:auto; background:rgba(59,130,246,.18); border:1px solid rgba(59,130,246,.34); color:#93c5fd;
-  border-radius:999px; padding:8px 12px; font-weight:800; cursor:pointer }
-.promo-copy:hover{ background:rgba(59,130,246,.28); color:#fff }
-.promo-desc{ color:#9fb2c9; font-size:.92rem; margin-top:6px }
-.promo-timer{
-  display:inline-block; margin-top:10px; padding:6px 10px; border-radius:999px;
-  background:rgba(148,163,184,.10); border:1px solid rgba(148,163,184,.18); font-weight:800; letter-spacing:.2px;
-}
-.yono-promo-card.status-upcoming .promo-timer{ background:rgba(59,130,246,.12); border-color:rgba(59,130,246,.28); color:#93c5fd }
-.yono-promo-card.status-active   .promo-timer{ background:rgba(251,191,36,.12); border-color:rgba(251,191,36,.28); color:#fbbf24 }
-.yono-promo-card.status-expired  .promo-timer{ background:rgba(239,68,68,.12);  border-color:rgba(239,68,68,.28);  color:#fca5a5 }
+@media (min-width:640px){ .yono-promos[data-layout="cards"]{ --cols:2; } }
+@media (min-width:1024px){ .yono-promos[data-layout="cards"]{ --cols:3; } }
 
-/* Toast */
-#toast-notification{
-  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
-  background:#16a34a; color:#fff; padding:12px 18px; border-radius:9999px;
-  z-index:10002; opacity:0; pointer-events:none; transition:.25s ease; font-weight:800;
-  box-shadow:0 12px 28px rgba(0,0,0,.35);
+.yono-promos[data-columns="1"]{ --cols:1; }
+.yono-promos[data-columns="2"]{ --cols:2; }
+.yono-promos[data-columns="3"]{ --cols:3; }
+
+.yono-promos-empty {
+  background: rgba(15,23,42,.6);
+  border:1px solid var(--line);
+  color: var(--muted);
+  padding:16px; border-radius:12px; text-align:center;
 }
-#toast-notification.show{ opacity:1; bottom:40px }
+
+.yono-promo-card {
+  background: linear-gradient(180deg, rgba(15,23,42,.85), rgba(15,23,42,.7));
+  border:1px solid var(--line);
+  border-radius:16px; padding:16px;
+  color: var(--text);
+  box-shadow: 0 10px 28px rgba(0,0,0,.25);
+  position:relative;
+  overflow:hidden;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+.yono-promo-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(59,130,246,.35);
+  box-shadow: 0 16px 40px rgba(0,0,0,.35);
+}
+
+.promo-badge {
+  position:absolute; top:12px; right:12px;
+  font-size:.75rem; font-weight:700; letter-spacing:.3px;
+  color:#0b1220; background: linear-gradient(135deg,#fbbf24,#f59e0b);
+  border-radius:9999px; padding:4px 10px; box-shadow:0 6px 18px rgba(245,158,11,.25);
+}
+
+.promo-title { margin:4px 0 10px; font-size:1.05rem; font-weight:800; }
+
+.promo-code-wrap {
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  background: rgba(30,41,59,.55);
+  border:1px solid rgba(148,163,184,.2);
+  border-radius:12px; padding:10px 12px;
+}
+.promo-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 800; letter-spacing: .06em;
+  color:#fbbf24; background: rgba(251,191,36,.1);
+  border-radius:8px; padding:6px 8px;
+}
+.promo-copy {
+  margin-left:auto;
+  background: rgba(59,130,246,.18);
+  border:1px solid rgba(59,130,246,.35);
+  color:#93c5fd;
+  border-radius:9999px; padding:8px 12px; cursor:pointer; font-weight:700;
+}
+.promo-copy:hover{ background: rgba(59,130,246,.28); color:#fff; }
+
+.promo-desc { margin:10px 2px 6px; color: var(--muted); font-size:.92rem; }
+
+.promo-timer {
+  margin-top:8px; font-size:.9rem; color:#cbd5e1;
+}
+.yono-promo-card.status-upcoming .promo-timer { color:#93c5fd; }
+.yono-promo-card.status-active .promo-timer { color:#fbbf24; }
+.yono-promo-card.status-expired .promo-timer { color:#fca5a5; }
+
+.yono-meta-wrap .yono-grid { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
+@media (max-width:640px){ .yono-meta-wrap .yono-grid{ grid-template-columns:1fr; } }
+
+
+
+.yono-meta-logo img {
+  width: 28px; height: 28px; border-radius: 4px; vertical-align: middle; margin-right: 8px;
+}
+
+/* Optional: make countdown stand out */
+.yono-promo-card .promo-timer {
+  display:inline-block;
+  margin-top:10px;
+  padding:6px 10px;
+  border-radius:9999px;
+  background: rgba(148,163,184,.10);
+  border: 1px solid rgba(148,163,184,.18);
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.yono-promo-card.status-upcoming .promo-timer {
+  background: rgba(59,130,246,.12);
+  border-color: rgba(59,130,246,.28);
+}
+.yono-promo-card.status-active .promo-timer {
+  background: rgba(251,191,36,.12);
+  border-color: rgba(251,191,36,.28);
+}
+.yono-promo-card.status-expired .promo-timer {
+  background: rgba(239,68,68,.12);
+  border-color: rgba(239,68,68,.28);
+}
