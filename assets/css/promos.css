@@ -1,109 +1,327 @@
-.yono-promos {
+/* =========================================================
+   TOKENS / GLOBALS
+   ========================================================= */
+:root{
+  --fg:#e5e7eb; --muted:#9aa4b2; --panel:#0b1220; --panel-2:#0e1726; --line:rgba(148,163,184,.15);
+  --amber:#f59e0b; --amber-2:#fbbf24; --red:#ef4444; --blue:#3b82f6; --green:#22c55e;
+  --sa-top: env(safe-area-inset-top, 0px);
+  --sa-right: env(safe-area-inset-right, 0px);
+  --sa-bottom: env(safe-area-inset-bottom, 0px);
+  --sa-left: env(safe-area-inset-left, 0px);
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+
+/* =========================================================
+   FLOATING PILL (vertical)
+   ========================================================= */
+.yono-float-trigger{
+  position:fixed; right:calc(22px + var(--sa-right)); bottom:calc(24px + var(--sa-bottom)); z-index:9999;
+  display:inline-flex; align-items:center; gap:8px;
+  writing-mode:vertical-rl; transform:rotate(180deg);
+  font-weight:700; letter-spacing:.2px; transition:transform .2s, box-shadow .2s, opacity .2s;
+}
+@media (hover:hover){
+  .yono-float-trigger:hover{ transform:rotate(180deg) translateY(-2px); box-shadow:0 10px 40px rgba(239,68,68,.45) }
+}
+.yono-float-trigger:focus-visible{ outline:2px solid #fff; outline-offset:3px }
+.yono-float-trigger span,.yono-float-trigger svg{ transform:rotate(180deg) }
+
+/* =========================================================
+   PROMO MODAL
+   ========================================================= */
+.yono-modal[hidden]{display:none}
+.yono-modal{position:fixed; inset:0; z-index:10000; display:grid; place-items:center; padding:clamp(8px,2vw,24px)}
+.yono-modal__backdrop{position:absolute; inset:0; background:rgba(2,6,23,.6); backdrop-filter:blur(3px)}
+.yono-modal__panel{
+  position:relative; width:min(680px,96vw); max-height:88vh; margin:auto; overflow:hidden;
+  background:var(--panel); border:1px solid var(--line); border-radius:18px; color:var(--fg);
+  box-shadow:0 20px 80px rgba(0,0,0,.5); display:flex; flex-direction:column;
+}
+.yono-modal__head{display:flex; justify-content:space-between; align-items:center; padding:18px 20px 8px; gap:10px}
+.yono-modal__head h3{margin:0; font-size:clamp(16px,2.2vw,20px); font-weight:800; color:var(--amber-2)}
+.yono-modal__subtitle{margin:2px 0 0; font-size:clamp(11px,1.8vw,12px); color:var(--muted)}
+.yono-modal__close{background:transparent; border:0; color:#9aa4b2; font-size:26px; line-height:1; padding:6px 10px; border-radius:8px; cursor:pointer}
+@media (hover:hover){ .yono-modal__close:hover{ color:#fff; background: rgba(148,163,184,.08) } }
+.yono-modal__close:focus-visible{ outline:2px solid var(--amber-2); outline-offset:2px }
+.yono-modal__body{ padding:14px 18px 18px; overflow:auto }
+
+.yono-tabs{display:flex; gap:12px; padding:10px 18px; border-top:1px solid var(--line); overflow:auto}
+.yono-tab{
+  border:1px solid rgba(148,163,184,.2); background:var(--panel-2); color:#cbd5e1;
+  padding:10px 14px; border-radius:12px; font-weight:700; cursor:pointer; white-space:nowrap; flex:0 0 auto;
+}
+.yono-tab.is-active{background:var(--amber); border-color:var(--amber); color:var(--panel)}
+.yono-tab:focus-visible{ outline:2px solid var(--amber-2); outline-offset:2px }
+
+/* =========================================================
+   PROMO CARDS (inside modal + anywhere)
+   ========================================================= */
+.yono-modal .yono-promos{display:grid; gap:14px}
+.yono-modal .yono-promo-card{background:var(--panel-2); border:1px solid rgba(148,163,184,.12); border-radius:14px; padding:14px}
+.yono-modal .promo-badge{display:inline-block; font-size:11px; font-weight:800; background:rgba(148,163,184,.14); color:#e5e7eb; border-radius:8px; padding:4px 8px; margin-bottom:6px}
+.yono-modal .promo-title{margin:0 0 6px; font-size:14px; color:#e5e7eb}
+.yono-modal .promo-code-wrap{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
+.yono-modal .promo-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-weight:900; letter-spacing:.6px}
+.yono-modal .promo-copy{border:0; border-radius:999px; padding:10px 14px; background:#1e293b; color:#cbd5e1; cursor:pointer}
+@media (hover:hover){ .yono-modal .promo-copy:hover{background:#334155} }
+.yono-modal .promo-desc{margin-top:6px; color:#9aa4b2; font-size:13px}
+.yono-modal .promo-timer{margin-top:6px; color:var(--amber-2); font-weight:700; font-size:12px}
+
+/* Grid wrapper when promos are output elsewhere too */
+.yono-promos{
   --bg:#0f1628; --panel:#121b2f; --line:rgba(148,163,184,.18);
-  --text:#e8f0fb; --muted:#9fb2c9; --accent:#f59e0b; --blue:#3b82f6; --green:#22c55e; --red:#ef4444;
+  --text:#e8f0fb; --muted:#9fb2c9; --accent:var(--amber); --blue:#3b82f6; --green:#22c55e; --red:#ef4444;
   display:grid; gap:14px;
 }
-.yono-promos[data-layout="cards"] {
-  grid-template-columns: repeat(var(--cols,1), minmax(0,1fr));
-}
-@media (min-width:640px){ .yono-promos[data-layout="cards"]{ --cols:2; } }
-@media (min-width:1024px){ .yono-promos[data-layout="cards"]{ --cols:3; } }
+.yono-promos[data-layout="cards"]{ grid-template-columns:repeat(var(--cols,1), minmax(0,1fr)) }
+@media (min-width:640px){ .yono-promos[data-layout="cards"]{ --cols:2 } }
+@media (min-width:1024px){ .yono-promos[data-layout="cards"]{ --cols:3 } }
+.yono-promos[data-columns="1"]{ --cols:1 } .yono-promos[data-columns="2"]{ --cols:2 } .yono-promos[data-columns="3"]{ --cols:3 }
 
-.yono-promos[data-columns="1"]{ --cols:1; }
-.yono-promos[data-columns="2"]{ --cols:2; }
-.yono-promos[data-columns="3"]{ --cols:3; }
-
-.yono-promos-empty {
-  background: rgba(15,23,42,.6);
-  border:1px solid var(--line);
-  color: var(--muted);
+.yono-promos-empty{
+  background:rgba(15,23,42,.6); border:1px solid var(--line); color:var(--muted);
   padding:16px; border-radius:12px; text-align:center;
 }
-
-.yono-promo-card {
-  background: linear-gradient(180deg, rgba(15,23,42,.85), rgba(15,23,42,.7));
-  border:1px solid var(--line);
-  border-radius:16px; padding:16px;
-  color: var(--text);
-  box-shadow: 0 10px 28px rgba(0,0,0,.25);
-  position:relative;
-  overflow:hidden;
-  transition: transform .2s, border-color .2s, box-shadow .2s;
+.yono-promo-card{
+  background:linear-gradient(180deg, rgba(15,23,42,.85), rgba(15,23,42,.7));
+  border:1px solid var(--line); border-radius:16px; padding:16px; color:var(--text);
+  box-shadow:0 10px 28px rgba(0,0,0,.25); position:relative; overflow:hidden;
+  transition:transform .2s, border-color .2s, box-shadow .2s;
 }
-.yono-promo-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(59,130,246,.35);
-  box-shadow: 0 16px 40px rgba(0,0,0,.35);
+@media (hover:hover){
+  .yono-promo-card:hover{ transform:translateY(-3px); border-color:rgba(59,130,246,.35); box-shadow:0 16px 40px rgba(0,0,0,.35) }
 }
-
-.promo-badge {
-  position:absolute; top:12px; right:12px;
-  font-size:.75rem; font-weight:700; letter-spacing:.3px;
-  color:#0b1220; background: linear-gradient(135deg,#fbbf24,#f59e0b);
+.promo-badge{
+  position:absolute; top:12px; right:12px; font-size:.75rem; font-weight:700; letter-spacing:.3px;
+  color:var(--panel); background:linear-gradient(135deg,var(--amber-2),var(--amber));
   border-radius:9999px; padding:4px 10px; box-shadow:0 6px 18px rgba(245,158,11,.25);
 }
-
-.promo-title { margin:4px 0 10px; font-size:1.05rem; font-weight:800; }
-
-.promo-code-wrap {
+.promo-title{ margin:4px 0 10px; font-size:1.05rem; font-weight:800 }
+.promo-code-wrap{
   display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-  background: rgba(30,41,59,.55);
-  border:1px solid rgba(148,163,184,.2);
+  background:rgba(30,41,59,.55); border:1px solid rgba(148,163,184,.2);
   border-radius:12px; padding:10px 12px;
 }
-.promo-code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-weight: 800; letter-spacing: .06em;
-  color:#fbbf24; background: rgba(251,191,36,.1);
-  border-radius:8px; padding:6px 8px;
+.promo-code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-weight:800; letter-spacing:.06em;
+  color:var(--amber-2); background:rgba(251,191,36,.1); border-radius:8px; padding:6px 8px;
 }
-.promo-copy {
-  margin-left:auto;
-  background: rgba(59,130,246,.18);
-  border:1px solid rgba(59,130,246,.35);
-  color:#93c5fd;
-  border-radius:9999px; padding:8px 12px; cursor:pointer; font-weight:700;
+.promo-copy{
+  margin-left:auto; background:rgba(59,130,246,.18); border:1px solid rgba(59,130,246,.35);
+  color:#93c5fd; border-radius:9999px; padding:8px 12px; cursor:pointer; font-weight:700;
 }
-.promo-copy:hover{ background: rgba(59,130,246,.28); color:#fff; }
-
-.promo-desc { margin:10px 2px 6px; color: var(--muted); font-size:.92rem; }
-
-.promo-timer {
-  margin-top:8px; font-size:.9rem; color:#cbd5e1;
+@media (hover:hover){ .promo-copy:hover{ background:rgba(59,130,246,.28); color:#fff } }
+.promo-desc{ margin:10px 2px 6px; color:var(--muted); font-size:.92rem }
+.promo-timer{ margin-top:8px; font-size:.9rem; color:#cbd5e1 }
+.yono-promo-card.status-upcoming .promo-timer{ color:#93c5fd }
+.yono-promo-card.status-active   .promo-timer{ color:var(--amber-2) }
+.yono-promo-card.status-expired  .promo-timer{ color:#fca5a5 }
+.yono-promo-card .promo-timer{
+  display:inline-block; margin-top:10px; padding:6px 10px; border-radius:9999px;
+  background:rgba(148,163,184,.10); border:1px solid rgba(148,163,184,.18); font-weight:700; letter-spacing:.2px;
 }
-.yono-promo-card.status-upcoming .promo-timer { color:#93c5fd; }
-.yono-promo-card.status-active .promo-timer { color:#fbbf24; }
-.yono-promo-card.status-expired .promo-timer { color:#fca5a5; }
+.yono-promo-card.status-upcoming .promo-timer{ background:rgba(59,130,246,.12); border-color:rgba(59,130,246,.28) }
+.yono-promo-card.status-active   .promo-timer{ background:rgba(251,191,36,.12); border-color:rgba(251,191,36,.28) }
+.yono-promo-card.status-expired  .promo-timer{ background:rgba(239,68,68,.12); border-color:rgba(239,68,68,.28) }
 
-.yono-meta-wrap .yono-grid { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
-@media (max-width:640px){ .yono-meta-wrap .yono-grid{ grid-template-columns:1fr; } }
+/* =========================================================
+   GAMES — CLEAN “STORE-TILE”
+   ========================================================= */
+.yono-games .yg-toolbar{display:grid;grid-template-columns:1fr auto;gap:14px;margin:10px 0 16px}
+.yono-games .yg-search{background:var(--panel-2);border:1px solid rgba(148,163,184,.2);border-radius:12px;padding:12px 14px;color:#e5e7eb;width:100%}
+.yono-games .yg-count{justify-self:end;color:#9aa4b2;align-self:center}
+.yono-games .yg-cat-chips{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+.yono-games .yg-chip{background:var(--panel-2);border:1px solid rgba(148,163,184,.2);color:#cbd5e1;border-radius:999px;padding:8px 12px;cursor:pointer}
+.yono-games .yg-chip.is-active{background:#1f2937;border-color:#1f2937;color:#fff}
+.yono-games .yg-sort{justify-self:end;display:flex;gap:8px;align-items:center}
+.yono-games .yg-sort select{background:var(--panel-2);border:1px solid rgba(148,163,184,.2);border-radius:10px;color:#e5e7eb;padding:8px 10px}
 
+/* Grid */
+.yono-games .yg-grid{display:grid;gap:18px}
+.yono-games[data-columns="2"] .yg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.yono-games[data-columns="3"] .yg-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.yono-games[data-columns="4"] .yg-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:980px){ .yono-games .yg-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:640px){ .yono-games .yg-grid{grid-template-columns:1fr} }
+@media (max-width:640px){ .yono-games[data-columns] .yg-grid{ grid-template-columns:1fr !important } } /* hard mobile override */
 
+/* Card */
+.yg-card{
+  position:relative; display:flex; flex-direction:column; gap:12px;
+  background:var(--panel); border:1px solid rgba(148,163,184,.13); border-radius:16px; padding:14px;
+  box-shadow:0 12px 30px rgba(2,6,23,.35); transition:border-color .2s, box-shadow .2s;
+}
+@media (hover:hover){ .yg-card:hover{ border-color:rgba(148,163,184,.22); box-shadow:0 16px 40px rgba(2,6,23,.45) } }
+.yg-card-head{position:absolute; top:10px; left:12px; display:flex; gap:8px}
+.yg-badge{background:#2a1d00;color:var(--amber-2);border:1px solid var(--amber);padding:4px 8px;border-radius:8px;font-size:11px;font-weight:800}
+.yg-pill{background:#102138;color:#8ab4ff;border:1px solid rgba(57,78,140,.6);padding:4px 8px;border-radius:8px;font-size:11px;font-weight:800}
 
-.yono-meta-logo img {
-  width: 28px; height: 28px; border-radius: 4px; vertical-align: middle; margin-right: 8px;
+.yg-card-body{display:grid; grid-template-columns:56px 1fr; gap:12px; align-items:start; margin-top:8px}
+.yg-logo{width:56px;height:56px;border-radius:12px;object-fit:cover;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.yg-title{margin:0 0 2px;font-size:16px;line-height:1.25;color:var(--fg);font-weight:800}
+.yg-sub{color:#9aa4b2;font-size:12px;margin:0 0 8px}
+.yg-spec{grid-column:2/-1; display:grid; gap:6px; background:var(--panel-2); border:1px solid rgba(148,163,184,.12); border-radius:12px; padding:10px 12px; color:#cbd5e1; font-size:13px}
+.yg-coming{grid-column:2/-1; display:flex; align-items:center; gap:8px; margin-top:6px}
+.yg-coming-label{background:#132033;color:#cbd5e1;padding:4px 8px;border-radius:8px;font-size:12px}
+.yg-countdown{font-weight:900;color:var(--amber-2)}
+.yg-card-foot{display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; margin-top:4px}
+.yg-cta{display:inline-block; text-align:center; text-decoration:none; background:#ef5a2f; color:#fff; font-weight:900; border:0; border-radius:12px; padding:12px 14px}
+.yg-cta[disabled]{opacity:.6}
+.yg-save{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;background:#1e293b;color:#cbd5e1;border:0;border-radius:12px;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(148,163,184,.2)}
+@media (hover:hover){ .yg-save:hover{background:#2b3a51} }
+.yg-card.is-upcoming .yg-cta{opacity:.85}
+@media (max-width:420px){ .yg-card-head{top:8px; left:10px; gap:6px} .yg-logo{width:52px;height:52px} }
+
+/* =========================================================
+   ADMIN METABOX helper
+   ========================================================= */
+.yono-meta-wrap .yono-grid{ display:grid; gap:10px; grid-template-columns:1fr 1fr }
+@media (max-width:640px){ .yono-meta-wrap .yono-grid{ grid-template-columns:1fr } }
+.yono-meta-logo img{ width:28px; height:28px; border-radius:4px; vertical-align:middle; margin-right:8px }
+
+/* =========================================================
+   YONO Promo — compact badge
+   ========================================================= */
+.yonp_promo{
+  --promo-bg:#ffffff; --promo-text:#111; --promo-muted:#666; --promo-border:rgba(0,0,0,.08); --promo-shadow:0 4px 12px rgba(10,10,10,.06);
+  display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:10px; background:var(--promo-bg); color:var(--promo-text);
+  border:1px solid var(--promo-border); box-shadow:var(--promo-shadow); font-size:14px; line-height:1; position:relative; cursor:pointer; user-select:none;
+  transition:transform .08s, box-shadow .12s, background .12s; white-space:nowrap; max-width:100%;
+}
+.yonp_promo .promo-label{ font-weight:600; display:inline-flex; align-items:center; gap:6px }
+.yonp_promo .promo-state{ font-weight:400; font-size:12px; color:var(--promo-muted); margin-left:6px; opacity:.95 }
+@media (hover:hover){ .yonp_promo:hover{ transform:translateY(-1px); box-shadow:0 8px 20px rgba(10,10,10,.09) } }
+.yonp_promo:focus{ outline:3px solid rgba(51,153,255,.18); outline-offset:3px }
+.yonp_promo.copied::after{
+  content:"Code copied"; position:absolute; left:50%; transform:translateX(-50%); bottom:calc(100% + 10px);
+  background:rgba(18,18,18,.92); color:#fff; padding:6px 10px; border-radius:8px; font-size:12px; white-space:nowrap; box-shadow:0 6px 18px rgba(0,0,0,.45); z-index:9999;
+}
+.yonp_promo.copied .promo-state{ opacity:0; transform:translateY(-2px); transition:opacity .12s, transform .12s }
+@media (max-width:420px){
+  .yonp_promo{ white-space:normal; padding:8px 12px; gap:6px }
+  .yonp_promo .promo-label{ font-size:14px }
+  .yonp_promo .promo-state{ display:block; margin-left:0; font-size:13px }
+}
+body.dark .yonp_promo,
+@media (prefers-color-scheme:dark){
+  .yonp_promo{ --promo-bg:#0e1113; --promo-text:#eaeaea; --promo-muted:#aeb3b6; --promo-border:rgba(255,255,255,.06); --promo-shadow:0 6px 20px rgba(0,0,0,.6) }
+}
+.yonp_promo .promo-check{ display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; font-size:13px; border-radius:50%; background:rgba(0,0,0,.06); color:inherit }
+.yonp_promo img{ display:inline-block; vertical-align:middle; width:18px; height:18px; object-fit:contain; filter:none }
+
+/* =========================================================
+   PROMO WIDGET (single source of truth)
+   ========================================================= */
+.promo-widget{
+  position:fixed;
+  right:calc(4px + var(--sa-right));
+  top:50%;
+  transform:translateY(-50%);
+  z-index:1000;
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+@media (max-width:768px){ .promo-widget{ right:calc(12px + var(--sa-right)); top:95% } }
+@media (max-width:480px){ .promo-widget{ right:calc(10px + var(--sa-right)); top:95% } }
+
+/* Legacy gradient button — keep for non-tile buttons only */
+.promo-trigger:not(.promo-tile){
+  color:#fff; border:0; border-radius:50px; padding:12px 18px; cursor:pointer;
+  transition:.25s; font-weight:700; font-size:13px; display:flex; align-items:center; gap:8px;
+  max-width:54px; /* scoped: will NOT affect .promo-tile */
+  animation:pulse-glow 2s infinite;
+}
+@keyframes pulse-glow{
+  0%,100%{ box-shadow:0 4px 20px rgba(245,158,11,.4) }
+  50%{ box-shadow:0 4px 30px rgba(245,158,11,.8) }
+}
+@media (hover:hover){ .promo-trigger:not(.promo-tile):hover{ transform:scale(1.05); box-shadow:0 6px 25px rgba(245,158,11,.6) } }
+
+/* === PROMO TILE (image-only) === */
+.promo-trigger.promo-tile{
+  background:transparent!important; border:0!important; padding:0!important; box-shadow:none!important;
+  display:inline-grid; place-items:center; line-height:0; max-width:none!important; border-radius:0!important; cursor:pointer;
+}
+.promo-trigger.promo-tile .promo-image{
+  display:block;
+  width:clamp(64px, 9vw, 100px);
+  height:clamp(64px, 9vw, 100px);
+  object-fit:contain;
+  background:transparent!important; border-radius:0!important; box-shadow:none!important; filter:none!important;
+}
+@media (max-width:480px){
+  .promo-trigger.promo-tile .promo-image{ width:72px; height:72px }
 }
 
-/* Optional: make countdown stand out */
-.yono-promo-card .promo-timer {
-  display:inline-block;
-  margin-top:10px;
-  padding:6px 10px;
-  border-radius:9999px;
-  background: rgba(148,163,184,.10);
-  border: 1px solid rgba(148,163,184,.18);
-  font-weight: 700;
-  letter-spacing: .2px;
+/* Popup */
+.promo-popup{
+  position:fixed; inset:0; background:rgba(0,0,0,.8); display:none; place-items:center; z-index:1001; backdrop-filter:blur(5px); padding:20px
 }
-.yono-promo-card.status-upcoming .promo-timer {
-  background: rgba(59,130,246,.12);
-  border-color: rgba(59,130,246,.28);
+.promo-popup.show{ display:grid;    justify-content: center; }
+.promo-content{
+  background: radial-gradient(120% 140% at 10% 0%, rgba(96,165,250,.08), rgba(15,23,42,.95) 40%);
+  border:1px solid rgba(148,163,184,.18); border-radius:20px; padding:24px; max-width:520px; width:92%;
+  max-height:80vh; overflow:auto; position:relative; box-shadow:0 30px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.03);
 }
-.yono-promo-card.status-active .promo-timer {
-  background: rgba(251,191,36,.12);
-  border-color: rgba(251,191,36,.28);
+.promo-close{ position:absolute; top:12px; right:16px; background:none; border:0; color:#94a3b8; font-size:24px; cursor:pointer; padding:6px }
+@media (hover:hover){ .promo-close:hover{ color:#fff } }
+.promo-header{ text-align:center; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid rgba(148,163,184,.12) }
+.promo-header h3{
+  margin:0 0 6px; font-size:22px; font-weight:800;
+  background:linear-gradient(135deg, var(--amber-2) 0%, var(--amber) 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
 }
-.yono-promo-card.status-expired .promo-timer {
-  background: rgba(239,68,68,.12);
-  border-color: rgba(239,68,68,.28);
+.promo-header p{ margin:0; color:#cbd5e1; font-size:13px }
+
+.tab-navigation{
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; padding:6px; border-radius:12px;
+  background:rgba(148,163,184,.06); border:1px solid rgba(148,163,184,.15); margin-bottom:12px;
+}
+.tab-button{
+  border:1px solid rgba(148,163,184,.15); border-radius:10px; padding:10px 12px; color:#cbd5e1; background:transparent; font-weight:700;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+@media (hover:hover){ .tab-button:hover{ background:rgba(148,163,184,.08); color:#e5e7eb } }
+.tab-button.active{ background:linear-gradient(135deg, var(--amber-2), var(--amber)); color:var(--panel); border-color:transparent; box-shadow:0 6px 20px rgba(245,158,11,.25) }
+.tab-content{ display:none } .tab-content.active{ display:block }
+
+.promo-list{ display:flex; flex-direction:column; gap:12px }
+.promo-item{
+  display:grid; grid-template-columns:1fr auto; align-items:center; gap:12px; padding:14px 16px; border-radius:14px;
+  background:linear-gradient(180deg, rgba(15,23,42,.85), rgba(15,23,42,.7)); border:1px solid rgba(148,163,184,.14);
+  transition:transform .2s, border-color .2s;
+}
+@media (hover:hover){ .promo-item:hover{ transform:translateY(-2px); border-color:rgba(59,130,246,.35) } }
+.promo-code{
+  display:inline-block; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-weight:800; letter-spacing:.06em;
+  font-size:15px; color:var(--amber-2); background:rgba(251,191,36,.12); padding:6px 10px; border-radius:8px; margin-bottom:6px;
+}
+.promo-desc{ color:#9fb3c8; font-size:12.5px }
+.copy-btn{
+  display:inline-flex; align-items:center; gap:8px; background:rgba(59,130,246,.15); border:1px solid rgba(59,130,246,.35); color:#93c5fd;
+  border-radius:9999px; padding:8px 12px; cursor:pointer; transition:background .2s; min-height:40px;
+}
+@media (hover:hover){ .copy-btn:hover{ background:rgba(59,130,246,.25) } }
+.copy-btn svg{ width:18px; height:18px }
+.copy-btn.copied{ background:rgba(34,197,94,.25); border-color:rgba(34,197,94,.45); color:#4ade80 }
+
+/* Toast */
+#toast-notification{
+  position:fixed; bottom:calc(20px + var(--sa-bottom)); left:50%; transform:translateX(-50%);
+  background:#16a34a; color:#fff; padding:12px 18px; border-radius:9999px; z-index:9999; opacity:0; pointer-events:none; transition:.25s ease; font-weight:600;
+  box-shadow:0 10px 25px rgba(0,0,0,.35);
+}
+#toast-notification.show{ opacity:1; bottom:calc(40px + var(--sa-bottom)) }
+
+/* Utilities used in your snippet */
+.controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+.subcontrols{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+.badge-select, .clear-btn{ min-height:40px }
+@media (max-width:768px){
+  .controls{ flex-direction:column; align-items:stretch }
+  .subcontrols{ flex-wrap:wrap }
+  .badge-select{ width:100% }
+  .clear-btn{ width:100%; margin-left:0 }
+  .game-grid{ grid-template-columns:1fr; gap:16px; padding:0 16px }
 }
