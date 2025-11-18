@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* =========================================================
    TOKENS / GLOBALS
    ========================================================= */
@@ -71,6 +72,69 @@
 
 /* Grid wrapper when promos are output elsewhere too */
 .yono-promos{
+=======
+/* ================================
+   FLOATING PILL (vertical)
+   ================================ */
+.yono-float-trigger{
+  position:fixed; right:22px; bottom:24px; z-index:9999;
+  display:inline-flex; align-items:center; gap:8px;
+  writing-mode:vertical-rl; transform:rotate(180deg);
+  padding:18px 14px; border:0; border-radius:999px; color:#fff; cursor:pointer;
+  background:linear-gradient(180deg,#f59e0b 0%, #ef4444 100%);
+  box-shadow:0 8px 32px rgba(239,68,68,.35);
+  font-weight:700; letter-spacing:.2px; transition:transform .2s, box-shadow .2s, opacity .2s;
+}
+.yono-float-trigger:hover{ transform:rotate(180deg) translateY(-2px); box-shadow:0 10px 40px rgba(239,68,68,.45) }
+.yono-float-trigger:focus-visible{ outline:2px solid #fff; outline-offset:3px }
+.yono-float-trigger span, .yono-float-trigger svg{ transform:rotate(180deg) }
+
+/* ================================
+   PROMO MODAL
+   ================================ */
+.yono-modal[hidden]{display:none}
+.yono-modal{position:fixed; inset:0; z-index:10000}
+.yono-modal__backdrop{position:absolute; inset:0; background:rgba(2,6,23,.6); backdrop-filter:blur(3px)}
+.yono-modal__panel{
+  position:relative; width:min(680px,92vw); margin:6vh auto;
+  background:#0b1220; border:1px solid rgba(148,163,184,.15); border-radius:18px; color:#e5e7eb;
+  box-shadow:0 20px 80px rgba(0,0,0,.5); max-height:88vh; display:flex; flex-direction:column;
+}
+.yono-modal__head{display:flex; justify-content:space-between; align-items:center; padding:18px 20px 8px}
+.yono-modal__head h3{margin:0; font-size:20px; font-weight:800; color:#fbbf24}
+.yono-modal__subtitle{margin:2px 0 0; font-size:12px; color:#9aa4b2}
+.yono-modal__close{background:transparent; border:0; color:#9aa4b2; font-size:26px; line-height:1; padding:6px 10px; border-radius:8px; cursor:pointer}
+.yono-modal__close:hover{ color:#fff; background: rgba(148,163,184,.08) }
+.yono-modal__close:focus-visible{ outline:2px solid #fbbf24; outline-offset:2px }
+.yono-modal__body{ padding:14px 18px 18px; overflow:auto }
+
+.yono-tabs{display:flex; gap:12px; padding:10px 18px; border-top:1px solid rgba(148,163,184,.15)}
+.yono-tab{
+  border:1px solid rgba(148,163,184,.2); background:#0e1726; color:#cbd5e1;
+  padding:10px 14px; border-radius:12px; font-weight:700; cursor:pointer
+}
+.yono-tab.is-active{background:#f59e0b; border-color:#f59e0b; color:#0b1220}
+.yono-tab:focus-visible{ outline:2px solid #fbbf24; outline-offset:2px }
+
+@media (max-width:480px){ .yono-modal__panel{margin:3vh auto; width:94vw} }
+
+/* ================================
+   PROMO CARDS (inside modal + anywhere)
+   ================================ */
+.yono-modal .yono-promos{display:grid; gap:14px}
+.yono-modal .yono-promo-card{background:#0e1726; border:1px solid rgba(148,163,184,.12); border-radius:14px; padding:14px}
+.yono-modal .promo-badge{display:inline-block; font-size:11px; font-weight:800; background:rgba(148,163,184,.14); color:#e5e7eb; border-radius:8px; padding:4px 8px; margin-bottom:6px}
+.yono-modal .promo-title{margin:0 0 6px; font-size:14px; color:#e5e7eb}
+.yono-modal .promo-code-wrap{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.yono-modal .promo-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-weight:900; letter-spacing:.6px}
+.yono-modal .promo-copy{border:0; border-radius:999px; padding:10px 14px; background:#1e293b; color:#cbd5e1; cursor:pointer}
+.yono-modal .promo-copy:hover{background:#334155}
+.yono-modal .promo-desc{margin-top:6px; color:#9aa4b2; font-size:13px}
+.yono-modal .promo-timer{margin-top:6px; color:#fbbf24; font-weight:700; font-size:12px}
+
+/* Grid wrapper when promos are output elsewhere too */
+.yono-promos {
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
   --bg:#0f1628; --panel:#121b2f; --line:rgba(148,163,184,.18);
   --text:#e8f0fb; --muted:#9fb2c9; --accent:var(--amber); --blue:#3b82f6; --green:#22c55e; --red:#ef4444;
   display:grid; gap:14px;

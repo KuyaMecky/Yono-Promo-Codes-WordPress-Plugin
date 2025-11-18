@@ -1,10 +1,19 @@
+<<<<<<< HEAD
 # Yono Promo Codes & Games
+=======
+# Game and Promo Plugin
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
 
 A WordPress plugin that lets you:
 
 * Manage **Promo Codes** with start/end schedules
+<<<<<<< HEAD
 * Show a **floating “Free Codes”** pill that opens a modern modal with tabs (Morning / Afternoon / Evening)
 * Manage **Games** (active & upcoming) with clean “store-tile” cards, countdowns, search, category chips, and sorting
+=======
+* Show a **floating "Free Codes"** pill that opens a modern modal with tabs (Morning / Afternoon / Evening)
+* Manage **Games** (active & upcoming) with clean "store-tile" cards, countdowns, search, category chips, and sorting
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
 * **Import/Export** games via CSV
 * Choose a **game logo** from the Media Library (or paste a direct URL)
 * Embed everything anywhere with **shortcodes**
@@ -78,6 +87,7 @@ A WordPress plugin that lets you:
 
 ## Quick start
 
+<<<<<<< HEAD
 1. **Add Promo Codes**
 
    * Go to **Promo Codes → Add New**.
@@ -86,6 +96,23 @@ A WordPress plugin that lets you:
    * Publish.
 
 2. **Add Games**
+=======
+   * Go to **Promo Codes → Add New**.
+   * Enter a **Promo Code**, optional label, and optional **Start/End** times.
+   * Assign a **Promo Period** (Morning / Afternoon / Evening).
+   * Publish.
+
+2. **Add Games**
+
+   * Go to **Games → Add New**.
+   * Provide **Title**, **Subtitle**, **Logo** (select from Media or paste URL), **Bonus**, **Minimum Withdrawal**, **CTA**, optional **Launch** date/time.
+   * Assign one or more **Categories** and **Badges**.
+   * Publish.
+
+3. **Embed on a Page**
+
+   * Insert the shortcodes:
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
 
    * Go to **Games → Add New**.
    * Provide **Title**, **Subtitle**, **Logo** (select from Media or paste URL), **Bonus**, **Minimum Withdrawal**, **CTA**, optional **Launch** date/time.
@@ -131,6 +158,7 @@ Displays cards for your promo codes. Also powers the modal content.
 
 **Examples**
 
+<<<<<<< HEAD
 ```markdown
 [yono_promos period="morning"]
 [yono_promos period="morning,evening" show_timer="false"]
@@ -186,6 +214,115 @@ order="relevance" (default) | latest | random
 id="123" or slug="jaiho-win" – if you want to force the “source” game from a different page
 
 ```
+=======
+* Default (long format, timers ON):
+
+  ```
+  [yono_promos]
+  ```
+
+* Compact countdown (HH:MM:SS):
+
+  ```
+  [yono_promos format="compact"]
+  ```
+
+* Only upcoming promos with countdown:
+
+  ```
+  [yono_promos status="upcoming" format="long"]
+  ```
+
+* Morning tab only, 3 columns, compact timers:
+
+  ```
+  [yono_promos period="morning" columns="3" format="compact"]
+  ```
+
+
+
+---
+
+## 🖥️ Admin Fields
+
+* **Promo Code** (required) — e.g., `SUNSET200`
+* **Label/Description** — e.g., *Evening Delight ₹200*
+* **Start** — when the promo becomes visible/active (optional)
+* **End** — when the promo expires (optional)
+* **Promo Period** — taxonomy for grouping (*Morning/Afternoon/Evening*)
+
+**Timezones:**
+Start/End are entered in **site timezone** and stored as **UTC**. Front-end timers use the visitor’s clock for smooth, live updates.
+
+---
+
+## 🎨 Front-End UX
+
+* **Dark, glassmorphism-style** cards with accent badges
+* **Period badge** (Morning / Afternoon / Evening)
+* **Copy to clipboard** with feedback state
+* **Live countdown** (“Starts in…” / “Ends in…”)
+* **Responsive grid** (1–3 columns)
+
+> The shortcode renderer is independent from your floating `promo-widget`. Use both together without conflicts.
+
+---
+
+## 🔒 Security & Performance
+
+* **Nonce-protected** meta saving
+* **Escaped** output everywhere it matters
+* **Lean queries** with `no_found_rows` and CPT scoping
+* **No external dependencies** beyond vanilla JS/CSS
+
+---
+
+## CSV Import / Export
+
+Open **Games → Import / Export** from the admin menu.
+
+### Export
+
+* Click **Download CSV** to export all games.
+
+### Import
+
+* Upload a CSV with the following headers:
+
+```
+title,subtitle,category,badge,logo,bonus_range,min_withdraw,cta_text,cta_url,launch_at,status
+```
+
+**Notes**
+
+* `category` and `badge` support **multiple values** separated by `|`.
+  Example: `Slots|Bingo`
+* `launch_at` expects **site local time**: `YYYY-MM-DD HH:MM`
+* Existing games are matched by **title** and updated (idempotent).
+
+---
+
+## Styling & Customization
+
+* Front-end CSS is in:
+
+  * `assets/css/promos.css` (promos, modal, floating pill + games layout)
+  * `assets/css/games.css` (if kept separate)
+* Front-end JS is in:
+
+  * `assets/js/promos.js` (promos, modal, games filters/sorting/countdown)
+  * `assets/js/games.js` (if kept separate)
+* Colors (accent/orange, blues) can be adjusted in CSS variables or gradient lines.
+
+---
+
+## Accessibility
+
+* Modal supports **ESC to close**, backdrop click to dismiss
+* **Focus trapping** while modal is open
+* Visible **focus outlines** on interactive controls
+* Countdown regions use `aria-live="polite"` for status updates
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
 
 ---
 
@@ -236,6 +373,7 @@ No configuration required—styles and scripts load with the plugin.
 
 ---
 
+<<<<<<< HEAD
 ## CSV Import / Export
 
 Open **Games → Import / Export** from the admin menu.
@@ -316,6 +454,8 @@ Yes. Add/edit terms under **Games → Categories** or **Games → Badges**.
 
 ---
 
+=======
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
 ## License
 
 GPL-2.0+

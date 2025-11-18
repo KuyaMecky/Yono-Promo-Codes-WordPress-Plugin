@@ -4,18 +4,31 @@
  * Description: Promo codes with scheduling + floating widget & modal, and a Games grid with upcoming countdown, search, filter, sort, CSV import/export. Includes Media Library picker for game logos (with URL fallback) + WIDE responsive game card layout. Adds per-game SEO Review shortcode. Latest Apps list + List/Grid archives with gold stars & badges.
  * Version: 2.4.2
  * Author: Kuya Mecky Pogi
+<<<<<<< HEAD
+=======
+ * Author URI: https://github.com/KuyaMecky
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
  * License: GPL-2.0+
  */
 
 if (!defined('ABSPATH')) exit;
 
 /* ---------------------------------------------------------
+<<<<<<< HEAD
  * UTIL HELPERS
+=======
+ * UTIL HELPERS (shared)
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
  * --------------------------------------------------------- */
 if (!function_exists('yono_iso_to_local_value')) {
   function yono_iso_to_local_value($iso){
     if (!$iso) return '';
+<<<<<<< HEAD
     $ts = strtotime($iso); if (!$ts) return '';
+=======
+    $ts = strtotime($iso);
+    if (!$ts) return '';
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
     $local = get_date_from_gmt(gmdate('Y-m-d H:i:s', $ts), 'Y-m-d H:i:s');
     return date('Y-m-d\TH:i', strtotime($local));
   }
@@ -31,6 +44,7 @@ if (!function_exists('yono_local_to_iso_utc')) {
     } catch (Exception $e) { return ''; }
   }
 }
+<<<<<<< HEAD
 
 /* ---------------------------------------------------------
  * UNIVERSAL STAR RENDERER (pixel perfect, always gold)
@@ -131,10 +145,30 @@ class Yono_Promos {
     add_action('wp_footer',               [$this,'render_floating_widget']);
     // NEW: settings screen for floating widget
     add_action('admin_menu',              [$this,'register_widget_settings_page']);
+=======
+
+/* =========================================================
+ * PROMO CODES + FLOATING WIDGET
+ * ========================================================= */
+class Yono_Promos {
+  const CPT  = 'yono_promo';
+  const TAX  = 'promo_period';   // morning/afternoon/evening
+  const NONCE = 'yono_promos_meta_nonce';
+
+  public function __construct(){
+    add_action('init',               [$this,'register_cpt_and_tax']);
+    add_action('add_meta_boxes',     [$this,'register_meta_boxes']);
+    add_action('save_post',          [$this,'save_meta']);
+    add_shortcode('yono_promos',     [$this,'shortcode']);
+    add_action('wp_enqueue_scripts', [$this,'enqueue_assets']);
+    add_action('admin_enqueue_scripts', [$this,'admin_assets']);
+    add_action('wp_footer',          [$this,'render_floating_widget']);
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
   }
 
   public function register_cpt_and_tax(){
     register_post_type(self::CPT, [
+<<<<<<< HEAD
       'label'  => 'Yono Promo Codes',
       'labels' => [
         'name'          => 'Promo Codes',
@@ -163,6 +197,24 @@ class Yono_Promos {
       if (!term_exists($slug, self::TAX)) {
         wp_insert_term(ucfirst($slug), self::TAX, ['slug'=>$slug]);
       }
+=======
+      'label' => 'Yono Promo Codes',
+      'labels' => [
+        'name'=>'Promo Codes','singular_name'=>'Promo Code',
+        'add_new_item'=>'Add New Promo Code','edit_item'=>'Edit Promo Code'
+      ],
+      'public'=>false,'show_ui'=>true,'show_in_menu'=>true,
+      'menu_icon'=>'dashicons-tickets-alt','supports'=>['title']
+    ]);
+
+    register_taxonomy(self::TAX, self::CPT, [
+      'label'=>'Promo Period','public'=>false,'show_ui'=>true,
+      'hierarchical'=>false,'show_admin_column'=>true
+    ]);
+
+    foreach (['morning','afternoon','evening'] as $slug){
+      if (!term_exists($slug, self::TAX)) wp_insert_term(ucfirst($slug), self::TAX, ['slug'=>$slug]);
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
     }
   }
 
@@ -263,10 +315,17 @@ class Yono_Promos {
     $end   = get_post_meta($post->ID,'_yono_end',true);
     ?>
     <div class="yono-meta-logo" style="margin:-4px 0 12px;">
+<<<<<<< HEAD
       <img src="https://allyonorefer.com/wp-content/uploads/2025/10/cropped-Untitled-design-9.png" alt="Yono Promo Codes" style="width:28px;height:28px;border-radius:4px;margin-right:8px;vertical-align:middle;">
+=======
+      <img src="https://allyonorefer.com/wp-content/uploads/2025/10/cropped-Untitled-design-9.png"
+        alt="Yono Promo Codes" style="width:28px;height:28px;border-radius:4px;margin-right:8px;vertical-align:middle;">
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
       <strong style="vertical-align:middle;">Yono Promo Details</strong>
     </div>
+
     <div class="yono-meta-wrap">
+<<<<<<< HEAD
       <p>
         <label><strong>Promo Code</strong></label><br>
         <input type="text" name="yono_code" value="<?php echo esc_attr($code); ?>" class="widefat" placeholder="e.g., MORNING50" required>
@@ -289,6 +348,20 @@ class Yono_Promos {
         Empty start = available now. Empty end = never expires.
         Assign period (Morning/Afternoon/Evening) in the right sidebar.
       </p>
+=======
+      <p><label><strong>Promo Code</strong></label><br>
+        <input type="text" name="yono_code" value="<?php echo esc_attr($code); ?>" class="widefat" placeholder="e.g., MORNING50" required></p>
+      <p><label><strong>Label / Description</strong></label><br>
+        <input type="text" name="yono_label" value="<?php echo esc_attr($label); ?>" class="widefat" placeholder="e.g., Morning Bonus ₹50"></p>
+
+      <div class="yono-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <p><label><strong>Start (local)</strong></label><br>
+          <input type="datetime-local" name="yono_start" value="<?php echo esc_attr(yono_iso_to_local_value($start)); ?>"></p>
+        <p><label><strong>End (local)</strong></label><br>
+          <input type="datetime-local" name="yono_end" value="<?php echo esc_attr(yono_iso_to_local_value($end)); ?>"></p>
+      </div>
+      <p class="description">Empty start = available now. Empty end = never expires. Assign period (Morning/Afternoon/Evening) in the right sidebar.</p>
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
     </div>
     <?php
   }
@@ -311,6 +384,7 @@ class Yono_Promos {
 
   public function shortcode($atts){
     $atts = shortcode_atts([
+<<<<<<< HEAD
       'period'      => '',
       'status'      => 'active,upcoming',
       'show_expired'=> 'false',
@@ -327,27 +401,38 @@ class Yono_Promos {
     $periods      = array_filter(array_map('trim', explode(',', strtolower($atts['period']))));
     $show_expired = filter_var($atts['show_expired'], FILTER_VALIDATE_BOOLEAN);
     $want_status  = array_filter(array_map('trim', explode(',', strtolower($atts['status']))));
+=======
+      'period'=>'','status'=>'active,upcoming','show_expired'=>'false',
+      'limit'=>'100','layout'=>'cards','columns'=>'1','empty_text'=>'No promo codes available right now.',
+      'show_copy'=>'true','show_timer'=>'true','order'=>'ASC','format'=>'long',
+    ], $atts,'yono_promos');
+
+    $periods = array_filter(array_map('trim', explode(',', strtolower($atts['period']))));
+    $show_expired = filter_var($atts['show_expired'], FILTER_VALIDATE_BOOLEAN);
+    $want_status = array_filter(array_map('trim', explode(',', strtolower($atts['status']))));
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
     if (!$want_status) $want_status=['active','upcoming'];
     $limit = max(1, intval($atts['limit']));
     $order = strtoupper($atts['order'])==='DESC' ? 'DESC' : 'ASC';
 
     $tax_query = [];
     if (!empty($periods)){
+<<<<<<< HEAD
       $tax_query[] = [
         'taxonomy'=>self::TAX,
         'field'   =>'slug',
         'terms'   =>$periods
       ];
+=======
+      $tax_query[] = ['taxonomy'=>self::TAX,'field'=>'slug','terms'=>$periods];
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
     }
 
     $q = new WP_Query([
-      'post_type'      => self::CPT,
-      'posts_per_page' => $limit,
-      'tax_query'      => $tax_query,
-      'orderby'        => 'title',
-      'order'          => $order,
-      'no_found_rows'  => true,
+      'post_type'=>self::CPT,'posts_per_page'=>$limit,'tax_query'=>$tax_query,
+      'orderby'=>'title','order'=>$order,'no_found_rows'=>true,
     ]);
+<<<<<<< HEAD
 
     $now_ts = time();
     $items  = [];
@@ -356,8 +441,25 @@ class Yono_Promos {
       $q->the_post();
       $id   = get_the_ID();
       $code = get_post_meta($id,'_yono_code',true);
+=======
+    $now_ts = time();
+    $items=[];
+    while($q->have_posts()){ $q->the_post();
+      $id=get_the_ID(); $code=get_post_meta($id,'_yono_code',true);
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
       if (!$code) continue;
+      $label=get_post_meta($id,'_yono_label',true);
+      $start_iso=get_post_meta($id,'_yono_start',true);
+      $end_iso  =get_post_meta($id,'_yono_end',true);
+      $st=$start_iso?strtotime($start_iso):0; $et=$end_iso?strtotime($end_iso):0;
+      $status='active'; if ($st && $now_ts<$st) $status='upcoming'; if ($et && $now_ts>$et) $status='expired';
+      if ($status==='expired' && !$show_expired) continue;
+      if (!in_array($status,$want_status,true) && !($status==='expired' && $show_expired)) continue;
+      $terms=wp_get_post_terms($id,self::TAX,['fields'=>'slugs']); $period=$terms?$terms[0]:'';
+      $items[]=['id'=>$id,'title'=>get_the_title(),'url'=>get_permalink(),'code'=>$code,'label'=>$label,'start'=>$start_iso,'end'=>$end_iso,'period'=>$period,'status'=>$status];
+    } wp_reset_postdata();
 
+<<<<<<< HEAD
       $label     = get_post_meta($id,'_yono_label',true);
       $start_iso = get_post_meta($id,'_yono_start',true);
       $end_iso   = get_post_meta($id,'_yono_end',true);
@@ -422,10 +524,38 @@ class Yono_Promos {
           <?php endif; ?>
           <div class="promo-timer" aria-live="polite" aria-atomic="true"></div>
         </article>
+=======
+    if (!$items) return '<div class="yono-promos-empty">'.esc_html($atts['empty_text']).'</div>';
+
+    $json = wp_json_encode([
+      'now'=>gmdate('c'),'showCopy'=>filter_var($atts['show_copy'], FILTER_VALIDATE_BOOLEAN),
+      'showTimer'=>filter_var($atts['show_timer'], FILTER_VALIDATE_BOOLEAN),
+      'format'=> in_array(strtolower($atts['format']),['long','compact'],true) ? strtolower($atts['format']) : 'long',
+    ]);
+
+    ob_start(); ?>
+    <div class="yono-promos" data-settings='<?php echo esc_attr($json); ?>' data-layout="<?php echo esc_attr($atts['layout']); ?>" data-columns="<?php echo esc_attr($atts['columns']); ?>">
+      <?php foreach($items as $it):
+        $start_attr = $it['start'] ? esc_attr($it['start']) : '';
+        $end_attr   = $it['end']   ? esc_attr($it['end'])   : '';
+      ?>
+      <article class="yono-promo-card status-<?php echo esc_attr($it['status']); ?>"
+               data-start="<?php echo $start_attr; ?>"
+               data-end="<?php echo $end_attr; ?>"
+               data-period="<?php echo esc_attr($it['period']); ?>">
+        <?php if ($it['period']): ?><span class="promo-badge"><?php echo esc_html(ucfirst($it['period'])); ?></span><?php endif; ?>
+        <h3 class="promo-title"><?php echo esc_html($it['title']); ?></h3>
+        <div class="promo-code-wrap">
+          <code class="promo-code"><?php echo esc_html($it['code']); ?></code>
+          <button class="promo-copy" type="button" aria-label="Copy promo code">Copy</button>
+        </div>
+        <?php if ($it['label']): ?><div class="promo-desc"><?php echo esc_html($it['label']); ?></div><?php endif; ?>
+        <div class="promo-timer" aria-live="polite" aria-atomic="true"></div>
+      </article>
+>>>>>>> 7de58f5b10964db4f5c4305dcd4e834e62c6092e
       <?php endforeach; ?>
     </div>
     <?php
-    return ob_get_clean();
   }
 
   /* ---------- Floating widget ---------- */
